@@ -1,39 +1,52 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 
 class CarroDB {
   static connect() {
-    const connection = mysql.createConnection({
+    return mysql.createConnection({
       host: 'localhost',
       user:  'root',
       password: '',
-      database: 'nodejs_crud'
+      database: 'cursos_crud'
     });
-    connection.connect();
-    return connection;
   }
 
   static getCarros(callback) {
     const connection = CarroDB.connect();
-    return { msg: 'nada'};
-    // console.log(connection.state);
-    // const sql = `SELECT * FROM carro`;
-    // connection.query(query, (error, results, fields) => {
-    //   if (error) throw error;
+    
+    const sql = `SELECT * FROM carros`;
+    
+    const query = connection.query(sql, (error, results) => {
+      if (error) throw error;
 
-    //   callback(results);
-    // });
+      callback(results);
+    });
 
-    // console.log(query.sql);
+    console.log(query.sql);
 
-    // connection.end();
+    connection.end();
+  }
 
+  static getTiposCarros(callback) {
+    const connection = CarroDB.connect();
+    
+    const sql = `SELECT distinct tipo FROM carros`;
+    
+    const query = connection.query(sql, (error, results) => {
+      if (error) throw error;
+
+      callback(results);
+    });
+
+    console.log(query.sql);
+
+    connection.end();
   }
 
   static getCarrosByTipo(tipo, callback) {
     const connection = CarroDB.connect();
 
-    const sql = `SELECT id, nome, tipo FROM carro WHERE tipo = '${tipo}'`;
-    const query = connection.query(query, (error, results, fields) => {
+    const sql = `SELECT id, nome, tipo FROM carros WHERE tipo = '${tipo}'`;
+    const query = connection.query(sql, (error, results, fields) => {
       if (error) throw error;
 
       callback(results);
@@ -47,7 +60,7 @@ class CarroDB {
   static getCarroById(id, callback) {
     const connection = CarroDB.connect();
 
-    const sql = `SELECT * FROM carro WHERE id = ?`;
+    const sql = `SELECT * FROM carros WHERE id = ?`;
 
     const query = connection.query(sql, id, (error, results, fields) => {
       if (error) throw error;
@@ -70,7 +83,7 @@ class CarroDB {
   static save(carro, callback) {
     const connection = CarroDB.connect();
 
-    const sql = `INSERT INTO carro WHERE id = ?`;
+    const sql = `INSERT INTO carros SET ?`;
 
     const query = connection.query(sql, carro, (error, results, fields) => {
       if (error) throw error;
@@ -88,7 +101,7 @@ class CarroDB {
   static update(carro, callback) {
     const connection = CarroDB.connect();
 
-    const sql = `UPDATE carro SET ? WHERE id = ?`;
+    const sql = `UPDATE carros SET ? WHERE id = ?`;
 
     const id = carro.id;
 
@@ -108,7 +121,7 @@ class CarroDB {
   static delete(carro, callback) {
     const connection = CarroDB.connect();
 
-    const sql = `DELETE FROM carro WHERE id = ?`;
+    const sql = `DELETE FROM carros WHERE id = ?`;
 
     const id = carro.id;
 
@@ -128,7 +141,7 @@ class CarroDB {
   static deleteById(id, callback) {
     const connection = CarroDB.connect();
 
-    const sql = `DELETE FROM carro WHERE id = ?`;
+    const sql = `DELETE FROM carros WHERE id = ?`;
 
     const query = connection.query(sql, id, (error, results, fields) => {
       if (error) throw error;
