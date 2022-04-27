@@ -8,25 +8,25 @@ class CarroDB {
       password: '',
       database: 'nodejs_crud'
     });
-    
     connection.connect();
-    
     return connection;
   }
 
   static getCarros(callback) {
     const connection = CarroDB.connect();
+    return { msg: 'nada'};
+    // console.log(connection.state);
+    // const sql = `SELECT * FROM carro`;
+    // connection.query(query, (error, results, fields) => {
+    //   if (error) throw error;
 
-    const sql = `SELECT * FROM carro`;
-    const query = connection.query(query, (error, results, fields) => {
-      if (error) throw error;
+    //   callback(results);
+    // });
 
-      callback(results);
-    });
+    // console.log(query.sql);
 
-    console.log(query.sql);
+    // connection.end();
 
-    connection.end();
   }
 
   static getCarrosByTipo(tipo, callback) {
