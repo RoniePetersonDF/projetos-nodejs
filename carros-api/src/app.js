@@ -5,31 +5,50 @@ const CarrosDB = require('./models/CarrosDB');
 const app = express();
 
 app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('API de carros');
 });
 
 
-app.post('/carros', (req, res) => {
-  console.log(req.body);
-  
-  // const carro = {
-  //   nome: req.body.nome,
-  //   descricao: req.body.descricao,
-  //   tipo: req.body.tipo,
-  // };
-
-  
-  // CarrosDB.save((carro, result) => {
-  //   res.json(result);
-  // });
-  res.send('post carros');
-});
-
 app.get('/carros', (req, res) => {
   CarrosDB.getCarros((carros) => {
     res.json(carros);
+  });
+});
+
+app.post('/carros', (req, res) => {
+  const carro = {
+    nome: req.body.nome,
+    descricao: req.body.descricao,
+    tipo: req.body.tipo,
+    url_foto: req.body.url_foto,
+    url_video: req.body.url_video,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude
+  };
+
+  CarrosDB.save(carro, (result) => {
+    res.json(result);
+  });
+});
+
+app.put('/carros/:id', (req, res) => {
+  const id = req.params.id;
+  
+  const carro = {
+    nome: req.body.nome,
+    descricao: req.body.descricao,
+    tipo: req.body.tipo,
+    url_foto: req.body.url_foto,
+    url_video: req.body.url_video,
+    latitude: req.body.latitude,
+    longitude: req.body.longitude,
+  };
+
+  CarrosDB.update(carro, id, (result) => {
+    res.json(result);
   });
 });
 

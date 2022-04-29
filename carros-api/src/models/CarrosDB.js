@@ -1,3 +1,4 @@
+const { json } = require("express/lib/response");
 const mysql = require("mysql2");
 
 class CarroDB {
@@ -67,7 +68,7 @@ class CarroDB {
 
       if(results.length == 0) {
         console.log("Nenhum carro encontrado.");
-        return;
+        callback({});  
       }
 
       const carro = results[0];
@@ -82,15 +83,15 @@ class CarroDB {
 
   static save(carro, callback) {
     const connection = CarroDB.connect();
-
+  
     const sql = `INSERT INTO carros SET ?`;
-
+    
     const query = connection.query(sql, carro, (error, results, fields) => {
       if (error) throw error;
 
       carro.id = results.insertId;
-
       callback(carro);
+
     });
 
     console.log(query.sql);
@@ -98,17 +99,15 @@ class CarroDB {
     connection.end();
   }
 
-  static update(carro, callback) {
+  static update(carro, id, callback) {
     const connection = CarroDB.connect();
 
     const sql = `UPDATE carros SET ? WHERE id = ?`;
 
-    const id = carro.id;
+    // const id = carro.id;
 
-    const query = connection.query(sql, [carro.id], (error, results, fields) => {
+    const query = connection.query(sql, [carro, id], (error, results, fields) => {
       if (error) throw error;
-
-      carro.id = results.insertId;
 
       callback(carro);
     });
