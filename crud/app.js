@@ -1,5 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
+const session = require('express-session');
+const flash = require('connect-flash');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -11,9 +13,11 @@ const sampledataRouter = require('./routes/sample_data');
 
 var app = express();
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -21,9 +25,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/sample_data', sampledataRouter);
+
+app.use(session({
+  secret: 'weblesson',
+  cookie: { maxAge: 60000},
+  saveUninitialized: false,
+  resave: false,
+}));
+
+app.use(flash);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
